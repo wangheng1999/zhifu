@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>当前环境</h2>
+<button onclick="clickGo()">点击跳转</button>
+<!--2021002175625296-->
+<script>
+    document.write(navigator.userAgent + navigator.userAgent.indexOf('Alipay'))
+    let environment = ''
+    if (navigator.userAgent.indexOf('MicroMessenger') != -1) {
+        document.write(navigator.userAgent.indexOf('MicroMessenger'))
+        environment = 'wx'
+    } else if (navigator.userAgent.indexOf('Alipay') != -1) {
+        document.write(navigator.userAgent.indexOf('Alipay'))
+        environment = 'zfb'
+    } else {
+
+    }
+    function clickGo() {
+        if (environment == 'zfb') {
+            window.location.href = `https://ds.alipay.com/?scheme=`+encodeURIComponent("alipays://platformapi/startapp?appId=2021002175625296&page=page/index/index&query=type")
+        } else if (environment == 'wx') {
+
+        }
+    }
+</script>
+</body>
+</html>
