@@ -3,30 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        #result {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+    </style>
 </head>
 <body>
-<h2>当前环境</h2>
-<button onclick="clickGo()">点击跳转</button>
-<!--2021002175625296-->
+<input type="file" id="audioFileInput" accept="audio/*">
+<button id="convertButton">转换为文字</button>
+<p id="result"></p>
 <script>
-    document.write(navigator.userAgent + navigator.userAgent.indexOf('Alipay'))
-    let environment = ''
-    if (navigator.userAgent.indexOf('MicroMessenger') != -1) {
-        document.write(navigator.userAgent.indexOf('MicroMessenger'))
-        environment = 'wx'
-    } else if (navigator.userAgent.indexOf('Alipay') != -1) {
-        document.write(navigator.userAgent.indexOf('Alipay'))
-        environment = 'zfb'
-    } else {
+    // 获取HTML元素
+    const audioFileInput = document.getElementById('audioFileInput');
+    const convertButton = document.getElementById('convertButton');
+    const resultElement = document.getElementById('result');
 
-    }
-    function clickGo() {
-        if (environment == 'zfb') {
-            window.location.href = `https://ds.alipay.com/?scheme=`+encodeURIComponent("alipays://platformapi/startapp?appId=2021002175625296&page=page/index/index&query=type")
-        } else if (environment == 'wx') {
+    // 创建一个新的SpeechRecognition对象
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 
-        }
-    }
+    // 设置语言和其他参数
+    recognition.lang = 'en-US'; // 设置语言，默认为英语
+    recognition.interimResults = false; // 设置是否返回临时结果
+
+    // 监听语音识别结果
+    recognition.onresult = function(event) {
+        const result = event.results[0][0].transcript;
+        resultElement.textContent = result;
+    };
+
+    // 监听错误事件
+    recognition.onerror = function(event) {
+        console.error('语音识别错误:', event.error);
+    };
+
+    // 监听语音识别结束事件
+    recognition.onend = function() {
+        console.log('语音识别结束');
+    };
+
+    // 监听文件选择事件
+    audioFileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const audio = new Audio();
+        audio.src = URL.createObjectURL(file);
+
+        // 监听音频加载完成事件
+        audio.addEventListener('canplaythrough', function() {
+            convertButton.disabled = false;
+        });
+    });
+
+    // 监听转换按钮点击事件
+    convertButton.addEventListener('click', function() {
+        recognition.start();
+    });
+
+
 </script>
 </body>
 </html>
